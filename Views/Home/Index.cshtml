@@ -2,46 +2,10 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
+<div >
     <h1 class="display-4">Welcome</h1>
     <h2>Web inventory management</h2>
 
-    <!-- Строка поиска -->
-    <div class="form-group">
-        <label for="searchInput">Search:</label>
-        <input type="text" class="form-control" id="searchInput" placeholder="Enter search criteria">
-        <select class="form-control" id="searchCategory">
-            <option value="name">Name</option>
-            <option value="category">Category</option>
-        </select>
-    </div>
 
-    <!-- Таблица для отображения данных -->
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Category</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Здесь будут строки с данными -->
-        </tbody>
-    </table>
-
-    <!-- Кнопки действий -->
-    <div class="btn-group" role="group" aria-label="Actions">
-        <button type="button" class="btn btn-primary" id="addItem">Add Item</button>
-        <button type="button" class="btn btn-secondary" id="editItem">Edit Item</button>
-        <button type="button" class="btn btn-danger" id="deleteItem">Delete Item</button>
-        <button type="button" class="btn btn-primary" id="addShelf">Add Shelf</button>
-        <button type="button" class="btn btn-secondary" id="shelfInfo">Shelf Info</button>
-        <button type="button" class="btn btn-danger" id="deleteShelf">Delete Shelf</button>
-        <button type="button" class="btn btn-success" id="saveData">Save</button>
-        <button type="button" class="btn btn-info" id="loadData">Load</button>
-    </div>
+    
 </div>

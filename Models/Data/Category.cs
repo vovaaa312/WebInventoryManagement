@@ -1,36 +1,17 @@
-﻿using System.Collections;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WebInventoryManagement.Models.Data
 {
-    public enum Category
+    public class Category
     {
-        Meat, Fish, Dairy, Vegetables, Fruits, Freezer, Alcohol, DriedGoods, Snacks, Care, None
-    }
-
-    public static class CategoryInfo
-    {
-        public const int Count = 11;
-
-        public static IEnumerable Items
+        public int Id { get; set; }
+        public string CategoryName { get; set; }
+        public Category(int id, string categoryName)
         {
-            get
-            {
-                List<Category> clubList = new();
-                clubList.Add(Category.None);
-                clubList.Add(Category.Meat);
-                clubList.Add(Category.Fish);
-                clubList.Add(Category.Dairy);
-                clubList.Add(Category.Vegetables);
-                clubList.Add(Category.Fruits);
-                clubList.Add(Category.Freezer);
-                clubList.Add(Category.Alcohol);
-                clubList.Add(Category.DriedGoods);
-                clubList.Add(Category.Snacks);
-                clubList.Add(Category.Care);
-
-                return clubList;
-
-            }
+            Id = id;
+            CategoryName = categoryName;
         }
+
+        public Category() { }
     }
 }

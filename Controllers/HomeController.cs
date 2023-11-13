@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebInventoryManagement.Models;
 
@@ -16,20 +17,26 @@ namespace WebInventoryManagement.Controllers
         public IActionResult Index()
         {
             return View();
-        }      
+        }
 
-        public IActionResult AddEditItem() { 
-            return View();
-        }
-        public IActionResult AddShelf()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [Route("/Home/Error")]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var statusCode = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            if (statusCode != null)
+            {
+                string statusCodeValue = statusCode.OriginalPath + statusCode.OriginalQueryString + " resulted in status code " + statusCode.OriginalPathBase;
+
+                if (int.TryParse(statusCodeValue, out int statusCodeInt))
+                {
+                    return View(new ErrorViewModel { StatusCode = statusCodeInt });
+                }
+            }
+
+            return View(new ErrorViewModel { StatusCode = 0 });
         }
+
     }
 }

@@ -1,0 +1,60 @@
+﻿@model WebInventoryManagement.Models.Data.Shelf
+@{
+    ViewData["Title"] = "Create Shelf";
+}
+
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ShelfName, htmlAttributes:
+            new{ @class = "control-label col-md-2" })
+
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ShelfName, new{ htmlAttributes =
+                new { @class = "form-control" } })
+
+                    @Html.ValidationMessageFor(model => model.ShelfName, "",
+                new{ @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => Model.CategoryId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => Model.CategoryId, new SelectList(ViewBag.CategoryList, "Value", "Text"))
+                    @Html.ValidationMessageFor(model => Model.CategoryId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => Model.StoreId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => Model.StoreId, new SelectList(ViewBag.StoreList, "Value", "Text"))
+                    @Html.ValidationMessageFor(model => Model.StoreId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="form-group" style="display:inherit">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" style="text-decoration: underline; color: blue; cursor: pointer;" />
+                </div>
+                <div>
+                    @Html.ActionLink("Back to List", "Index")
+                </div>
+            </div>
+        </div>
+    }
+
+
+</div>
+
