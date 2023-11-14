@@ -9,13 +9,11 @@ namespace WebInventoryManagement.Controllers
     {
         private ShelfService shelfService;
 
+        private readonly ILogger<HomeController> _logger;
         public ShelfController(ShelfService _shelfService)
         {
             this.shelfService = _shelfService;
         }
-
-        private readonly ILogger<HomeController> _logger;
-
 
 
         public ActionResult Index()
@@ -101,13 +99,15 @@ namespace WebInventoryManagement.Controllers
             }
             return View("Edit", shelf);
         }
-       
 
 
-        private void LoadViewBagStoresList() {
-            ViewBag.StoreList = new SelectList(shelfService.GetAllStores(), "Id", "StoreName"); 
+
+        private void LoadViewBagStoresList()
+        {
+            ViewBag.StoreList = new SelectList(shelfService.GetAllStores(), "Id", "StoreName");
         }
-        private void LoadViewBagCategoriesList() {
+        private void LoadViewBagCategoriesList()
+        {
             ViewBag.CategoryList = new SelectList(shelfService.GetAllCategories(), "Id", "CategoryName");
         }
 
