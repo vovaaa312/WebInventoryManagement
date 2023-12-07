@@ -1,18 +1,26 @@
-﻿@{
+﻿@using WebInventoryManagement.Models.Data;
+@{
     ViewData["Title"] = "Shelves";
 }
+
 <body>
     <div class="container mt-3">
-        <!-- Добавленный отступ -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <!-- Используем Flexbox для выравнивания и расположения элементов -->
             <a href="/Shelf/Create" class="btn btn-primary">Add Shelf</a>
-            <div style="width: 10%;"></div> <!-- Пустой блок для создания отступа (10% от ширины родительского контейнера) -->
+            <div style="width: 10%;"></div>
             <div>
                 <label for="storeComboBox">Select Store:</label>
-                @Html.DropDownList("storeComboBox", ViewBag.StoreList as SelectList, new { id = "storeComboBox" })
+                <select id="storeComboBox" onchange="filterShelves()">
+                    <option value="All">All</option>
+                    @foreach (var store in ViewBag.StoreList)
+                    {
+                        <option value="@store.Value">@store.Text</option>
+                    }
+                </select>
             </div>
         </div>
+
+        <input type="text" id="searchBox" placeholder="Search by name..." onkeyup="filterShelves()">
 
         <table class="table">
             <thead>
@@ -27,17 +35,18 @@
             <tbody>
                 @foreach (var shelf in Model)
                 {
-                    <tr>
+                    <tr class="item-row" data-store-id="@shelf.Store.Id">
                         <td>@shelf.ShelfName</td>
                         <td>@shelf.ItemCount</td>
                         <td>@shelf.Category.CategoryName</td>
                         <td>@shelf.Store.StoreName</td>
                         <td>
+                            <!-- Action Buttons -->
                             <form asp-controller="Shelf" asp-action="Edit" asp-route-id="@shelf.Id" method="post">
-                                <button type="submit" class="btn-link">Edit</button>
+                                <button class="btn-primary" type="submit" class="btn-link">Edit</button>
                             </form>
                             <form asp-controller="Shelf" asp-action="Delete" asp-route-id="@shelf.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this shelf?');">
-                                <button type="submit" class="btn-link">Delete</button>
+                                <button class="btn-danger" type="submit" class="btn-link">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -45,4 +54,28 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        function filterShelves() {
+            var selectedStoreId = $('#storeComboBox').val();
+            var searchText = $('#searchBox').val().toLowerCase();
+
+            $('.item-row').each(function () {
+                var storeId = $(this).data('store-id').toString();
+                var shelfName = $(this).find('td:first').text().toLowerCase();
+
+                var storeMatch = (selectedStoreId === 'All' || storeId === selectedStoreId);
+                var nameMatch = shelfName.startsWith(searchText);
+
+                if (storeMatch && nameMatch) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+
+    </script>
+
 </body>

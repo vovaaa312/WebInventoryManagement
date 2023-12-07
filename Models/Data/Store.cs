@@ -6,6 +6,8 @@
         public string StoreName { get; set; }
         public int ShelfCount { get; set; } = 0;
 
+
+
         public Store(int id, string storeName, int shelfCount)
         {
             Id = id;

@@ -8,21 +8,34 @@ namespace WebInventoryManagement.Controllers
 {
     public class ItemController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController>? _logger;
 
         private ItemService itemService;
 
-        public ItemController(ItemService itemService)
+        private ShelfService shelfService;
+
+        private CategoryService categoryService;
+
+        private StoreService storeService;
+
+
+
+        public ItemController(ItemService itemService, ShelfService shelfService, CategoryService categoryService, StoreService storeService)
         {
             this.itemService = itemService;
+            this.shelfService = shelfService;
+            this.categoryService = categoryService;
+            this.storeService = storeService;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Item> items = itemService.GetAllItems();
+            IEnumerable<Item> items = itemService.GetAll();
             LoadViewBagShelvesList();
+            LoadViewBagStoresList();
             return View(items);
         }
+
 
         [HttpGet]
         public ActionResult Create()
@@ -42,15 +55,15 @@ namespace WebInventoryManagement.Controllers
 
             if (item.ItemName != null)
             {
-                item.Shelf = (from shelf in itemService.GetAllShelves() where shelf.Id == item.ShelfId select shelf).First();
-                item.Category = (from category in itemService.GetAllCategories() where category.Id == item.CategoryId select category).First();
+                item.Shelf = (from shelf in shelfService.GetAll() where shelf.Id == item.ShelfId select shelf).First();
+                item.Category = (from category in categoryService.GetAll() where category.Id == item.CategoryId select category).First();
 
-                itemService.AddItem(item);
+                itemService.Save(item);
                 return RedirectToAction("Index");// Перенаправить на экшен Index
             }
 
 
-            LoadViewBagCategoriesList(); 
+            LoadViewBagCategoriesList();
             LoadViewBagShelvesList();
 
             return View();
@@ -69,7 +82,7 @@ namespace WebInventoryManagement.Controllers
                 return NotFound();
             }
 
-            itemService.DeleteItem(item);
+            itemService.Delete(item);
 
             return RedirectToAction("Index");
 
@@ -93,8 +106,8 @@ namespace WebInventoryManagement.Controllers
         {
             if (item.ItemName != null)
             {
-                item.Shelf = (from shelf in itemService.GetAllShelves() where shelf.Id == item.ShelfId select shelf).First();
-                item.Category = (from category in itemService.GetAllCategories() where category.Id == item.CategoryId select category).First();
+                item.Shelf = (from shelf in shelfService.GetAll() where shelf.Id == item.ShelfId select shelf).First();
+                item.Category = (from category in categoryService.GetAll() where category.Id == item.CategoryId select category).First();
 
 
                 itemService.UpdateItem(item);
@@ -105,12 +118,19 @@ namespace WebInventoryManagement.Controllers
 
         private void LoadViewBagShelvesList()
         {
-            ViewBag.ShelfList = new SelectList(itemService.GetAllShelves(), "Id", "ShelfName");
+            ViewBag.ShelfList = ViewBagLoader.LoadViewBagList(shelfService.GetAll(), "Id", "ShelfName");
+
         }
 
         private void LoadViewBagCategoriesList()
         {
-            ViewBag.CategoryList = new SelectList(itemService.GetAllCategories(), "Id", "CategoryName");
+            ViewBag.CategoryList = ViewBagLoader.LoadViewBagList(categoryService.GetAll(), "Id", "CategoryName");
         }
+
+        private void LoadViewBagStoresList()
+        {
+            ViewBag.StoreList = ViewBagLoader.LoadViewBagList(storeService.GetAll(), "Id", "StoreName");
+        }
+
     }
 }

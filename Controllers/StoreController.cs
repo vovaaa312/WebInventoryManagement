@@ -36,7 +36,7 @@ namespace WebInventoryManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                storeService.AddStore(store);
+                storeService.Save(store);
                 return RedirectToAction("Index"); // Перенаправить на экшен Index
             }
             return View(); // В случае ошибки возвращаем ту же форму для исправления
@@ -45,8 +45,8 @@ namespace WebInventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id)
         {
-            
-                // Найдите элемент по id
+            try
+            {
                 var store = storeService.GetById(id);
 
                 if (store == null)
@@ -54,12 +54,19 @@ namespace WebInventoryManagement.Controllers
                     return NotFound();
                 }
 
-                // Удалите элемент
-                storeService.DeleteStore(store);
-
-                return RedirectToAction("Index"); // Перенаправить на экшен Index           
-            
+                storeService.Delete(store);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex) 
+            {
+                if (ex.Message.Contains("ORA-02292"))
+                {
+                    return RedirectToAction("Error", new { message = "The Store cannot be deleted because there are Shelf entries associated with it." });
+                }
+                throw;
+            }
         }
+
 
         public IActionResult Edit(int id)
         {
@@ -74,34 +81,21 @@ namespace WebInventoryManagement.Controllers
         [HttpPost]
         public IActionResult Update(Store store)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && store.StoreName != "" && store.StoreName!=null)
             {
-                storeService.UpdateStore(store);
+                storeService.Update(store);
                 return RedirectToAction("Index");
             }
             return View("Edit", store);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        [Route("/Shared/Error")]
-        public ActionResult Error(int? statusCode)
+        [Route("[controller]/Error")]
+        public ActionResult Error(int? statusCode, string message = null)
         {
-            var errorModel = new ErrorViewModel();
-
-            if (statusCode.HasValue)
-            {
-                errorModel.StatusCode = statusCode.Value;
-                errorModel.ErrorMessage = "An error occurred with status code: " + statusCode.Value;
-            }
-            else
-            {
-                errorModel.StatusCode = 500; // Internal Server Error
-                errorModel.ErrorMessage = "An unexpected error occurred.";
-            }
-
-            return View(errorModel);
+            return ErrorHandler.Error(this, statusCode, message);
         }
-        
+
 
 
 

@@ -11,6 +11,7 @@ internal class Program
         builder.Services.AddTransient<StoreService>();
         builder.Services.AddTransient<ShelfService>();
         builder.Services.AddTransient<ItemService>();
+        builder.Services.AddTransient<CategoryService>();
 
 
         builder.Services.AddControllersWithViews();

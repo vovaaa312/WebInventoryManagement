@@ -12,6 +12,11 @@
         public int ShelfId { get; set; }
         public int CategoryId { get; set; }
 
+        public Store Store { get; set; }
+
+        public int StoreId { get; set; } 
+
+
         public Item(int id, string itemName, int price, int quantity, string description, Shelf shelf, Category category)
         {
             Id = id;
@@ -22,8 +27,11 @@
             Shelf = shelf;
             Category = category;
 
-            Shelf.Id = Shelf.Id;
-            Category.Id = Category.Id;
+            StoreId = shelf?.Store?.Id ?? 0;
+            Store = shelf.Store;
+
+            ShelfId = shelf?.Id ?? 0;
+            CategoryId = category?.Id ?? 0;
         }
 
         public Item() { }
